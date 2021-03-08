@@ -1,22 +1,33 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1</title>
+    <style>
+        input:valid {
+            border: 2px solid green;
+        }
+
+        input:invalid {
+            border: 2px solid red;
+        }
+    </style>
 </head>
 <body>
 <label for="email"> Email: </label>
 <input type="email" id="email" name="email" placeholder="aa@aa.com"/> </br>
 <label for="zipcode"> ZIP code: </label>
-<input type="text" id="zipcode" name="zipcode" pattern="^\d{2}-\d{3}$" title="format xx-xxx" placeholder="33-112"/> </br>
+<input type="text" id="zipcode" name="zipcode" pattern="^[0-9]{2}-[0-9]{3}$" placeholder="91-321"><br>
 <label for="nip"> NIP: </label>
 <input type="text" id="nip" name="nip" pattern="^((\d{3}[- ]\d{3}[- ]\d{2}[- ]\d{2})|(\d{3}[- ]\d{2}[- ]\d{2}[- ]\d{3}))$" title="format xxx-xx-xx-xxx" placeholder="771-160-11-11"/> </br>
 <label for="idnumber"> ID number: </label>
-<input type="text" id="idnumber" name="idnumber" pattern="[A-Z]{3}[0-9]{6}" title="Invalid id format" placeholder="aaa123456"/> </br>
+<input type="text" id="idnumber" name="idnumber" pattern="[A-Z]{3}[0-9]{6}" title="Invalid id format" placeholder="ABC123456"/> </br>
 <label for="ipv4"> IPv4: </label>
 <input type="text" id="ipv4" name="ipv4" pattern="[((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}]$" placeholder="255.0.0.0"/> </br>
 <label for="url"> webpage: </label>
-<input type="url" id="url" name="url" pattern="https?://.+" title="Include http://" placeholder="http://example.com"/> </br>
+<input type="url" id="url" name="url" pattern="http?://.+" title="Include http://" placeholder="http://example.com"/> </br>
 <label for="path"> Path: </label>
 <input type="text" id="path" name="path" pattern="^(?:[a-z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+$" title="invalid path format" placeholder="c:\windows\temp"/> </br>
 <label for="path2"> Path2: </label>
@@ -26,6 +37,6 @@
 <label for="ipv6"> IPv6 </label>
 <input type="text" id="ipv6" name="ipv6" pattern="((^|:)([0-9a-fA-F]{0,4})){1,8}$" title="format xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx" placeholder="2001:0db8:85a3:0000:0000:8a2e:0370:7334"/> </br>
 <label for="phone"> Phone number: </label>
-<input type="tel" id="phone" name="phone" placeholder="123-452-678" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"><br>
+<input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" placeholder="123-452-678"><br>
 </body>
 </html>
