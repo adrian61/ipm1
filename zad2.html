@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1</title>
+    <style>
+        input:valid {
+            border: 2px solid green;
+        }
+
+        input:invalid {
+            border: 2px solid red;
+        }
+    </style>
+</head>
+<body>
+<label for="email"> Email: </label>
+<input required type="email" id="email" name="email" placeholder="aa@aa.com"/> <br>
+<label for="zipcode"> ZIP code: </label>
+<input required type="text" id="zipcode" name="zipcode" pattern="^[0-9]{2}-[0-9]{3}$" placeholder="91-321"><br>
+<label for="nip"> NIP: </label>
+<input required type="text" id="nip" name="nip" pattern="^((\d{3}[- ]\d{3}[- ]\d{2}[- ]\d{2})|(\d{3}[- ]\d{2}[- ]\d{2}[- ]\d{3}))$" title="format xxx-xx-xx-xxx" placeholder="771-160-11-11"/> <br>
+<label for="idnumber"> ID number: </label>
+<input required type="text" id="idnumber" name="idnumber" pattern="[A-Z]{3}[0-9]{6}" title="Invalid id format" placeholder="ABC123456"/> <br>
+<label for="ipv4"> IPv4: </label>
+<input required type="text" id="ipv4" name="ipv4" pattern="[((^|\.)((25[0-5])|(2[0-4]\d)|(1\d\d)|([1-9]?\d))){4}]$" placeholder="255.0.0.0"/> <br>
+<label for="url"> webpage: </label>
+<input required type="url" id="url" name="url" pattern="http?://.+" title="Include http://" placeholder="http://example.com"/> <br>
+<label for="path"> Path: </label>
+<input required pattern="^[a-zA-Z]:\\(windows|winnt|win|dos|msdos)\\?[a-z]*" id="path" name="path" placeholder="c:\windows\temp"><br>
+<label for="path2"> Path2: </label>
+<input required pattern="^[a-zA-Z]:\\([Ww][Ii][Nn][Dd][Oo][Ww][Ss]|[Ww][Ii][Nn][Nn][Tt]|[Ww][Ii][Nn]|[Dd][Oo][Ss]|[Mm][Ss][Dd][Oo][Ss])\\?[a-zA-Z]*"  id="path2" name="path2" placeholder="D:\WinDowS\temp"> <br>
+<label for="path3"> Path /etc/: </label>
+<input required pattern="^(/etc/).*" id="path3" name="path3" placeholder="/etc/hosts"> <br>
+<label for="ipv6"> IPv6 </label>
+<input required type="text" id="ipv6" name="ipv6" pattern="((^|:)([0-9a-fA-F]{0,4})){1,8}$" title="format xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx" placeholder="2001:0db8:85a3:0000:0000:8a2e:0370:7334"/> <br>
+<label for="phone"> Phone number: </label>
+<input required type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" placeholder="123-452-678"><br>
+<label for="date">date:</label>
+<input required id="date" name="date" type="date"><br>
+<label for="date">date2:</label>
+<input required id="date2" name="date2" type="date" min="2021-03-15" max="2021-03-19"><br>
+<label for="time12">time(12h):</label>
+<input required id="time12" name="time12" type="time" min="01:00" max="12:00" ><br>
+<label for="time24">time(24h):</label>
+<input required id="time24" name="time24" type="time" ><br>
+</body>
+</html>
