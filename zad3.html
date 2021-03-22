@@ -59,6 +59,8 @@
     };
     var gameOver = false;
     var gameStarted = false;
+
+    var blocks = [];
     function permissionIOS() {
         if (
             typeof DeviceMotionEvent !== "undefined" &&
@@ -84,6 +86,14 @@
         document.getElementById("newbox").style.display ="block";
     }
     function newBox(){
+        var color = "rgb(" + Math.floor(Math.random()*255) + "," + Math.floor(Math.random()*255) + "," + Math.floor(Math.random()*255) +")";
+        var size = Math.floor(Math.random()*255)
+        blocks.push({
+            size: size,
+            color: color,
+            x: Math.floor(Math.random()*canvas.width),
+            y: Math.floor(Math.random()*canvas.height),
+        });
     }
 
     var FPS = 240;
@@ -91,7 +101,14 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     };
-
+    function drawBlocks()
+    {
+        for(var i = 0; i < blocks.length; i++)
+        {
+            ctx.fillStyle = blocks[i].color;
+            ctx.fillRect(blocks[i].x, blocks[i].y, blocks[i].size, blocks[i].size);
+        }
+    }
 
     function handleOrientation(event) {
     }
@@ -102,7 +119,7 @@
                 ctx.fillRect(2000, 20, 150, 100);
                 ctx.fillStyle = "White";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+                drawBlocks();
                 // if (gameOver) {
                 //     ctx.font = "50px Arial";
                 //     ctx.fillStyle = "red";
