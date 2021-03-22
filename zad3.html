@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=800" />
+    <style>
+        * {
+            touch-action: manipulation;
+        }
+        .block {
+            display: block;
+            width: 100%;
+            height: 20%;
+            border: none;
+            background-color: #dd1443;
+            padding: 14px 28px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+        }
+        body {
+            margin: 0;
+        }
+        .canvasStyle {
+            border: 0;
+            width: 800;
+            height: 600;
+        }
+        div {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <button id="startGameBtn" class="block" onclick="permissionIOS()">
+        Start Game
+    </button>
+    <button id="newbox" class="block" onclick="newBox()" style="display: none;">
+        generate new box
+    </button>
+</div>
+<canvas id="myCanvas" class="canvasStyle">
+</canvas>
+
+<script>
+    document.getElementById("myCanvas").hidden = true;
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    window.onresize = function () {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+    var gameOver = false;
+    var gameStarted = false;
+    function permissionIOS() {
+        if (
+            typeof DeviceMotionEvent !== "undefined" &&
+            typeof DeviceMotionEvent.requestPermission === "function"
+        ) {
+            DeviceMotionEvent.requestPermission()
+                .then((response) => {
+                    if (response == "granted") {
+                        window.addEventListener(
+                            "deviceorientation",
+                            handleOrientation,
+                            true
+                        );
+                    }
+                })
+                .catch(console.error);
+        } else {
+            window.addEventListener("deviceorientation", handleOrientation, true);
+        }
+        gameStarted = true;
+        document.getElementById("myCanvas").hidden = false;
+        document.getElementById("startGameBtn").remove();
+        document.getElementById("newbox").style.display ="block";
+    }
+    function newBox(){
+    }
+
+    var FPS = 240;
+    window.onresize = function () {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+
+
+    function handleOrientation(event) {
+    }
+    window.onload = function () {
+        setInterval(function () {
+            if (!gameOver && gameStarted) {
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(2000, 20, 150, 100);
+                ctx.fillStyle = "White";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // if (gameOver) {
+                //     ctx.font = "50px Arial";
+                //     ctx.fillStyle = "red";
+                //     ctx.textAlign = "center";
+                //     ctx.fillText("You Won!", canvas.width / 2, canvas.height / 2);
+                // }
+            }
+        }, 1000 / FPS);
+    };
+</script>
+</body>
+</html>
