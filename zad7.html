@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="pl">
 <head>
     <style>
         input:valid {
@@ -6,6 +7,31 @@
         }
         input:invalid {
             border-color: rgb(255, 0, 0);
+        }
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two unequal columns that floats next to each other */
+        .column {
+            float: left;
+            padding: 10px;
+            height: 300px; /* Should be removed. Only for demonstration */
+        }
+
+        .left {
+            width: 20%;
+        }
+
+        .right {
+            width: 80%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
         }
     </style>
     <script>
@@ -36,10 +62,9 @@
                 objectStore.createIndex("email", "email", {unique: false});
                 objectStore.createIndex("address", "address", {unique: false});
                 objectStore.createIndex("city", "city", {unique: false});
-                objectStore.createIndex("zip", "zip", {unique: false});
+                objectStore.createIndex("postal", "postal", {unique: false});
                 objectStore.createIndex("nip", "nip", {unique: false});
                 objectStore.createIndex("company", "company", {unique: false});
-                objectStore.createIndex("id_card", "id_card", {unique: false});
                 objectStore.createIndex("phone", "phone", {unique: false});
                 objectStore.transaction.oncomplete = function(event) {
 
@@ -54,13 +79,12 @@
                 var bemail = document.getElementById('emailInput').value;
                 var baddress = document.getElementById('addressInput').value;
                 var bcity = document.getElementById('cityInput').value;
-                var bzip = document.getElementById('zipInput').value;
+                var bpostal = document.getElementById('postalInput').value;
                 var bnip = document.getElementById('nipInput').value;
                 var bcompany = document.getElementById('companyInput').value;
-                var bid_card = document.getElementById('idCardInput').value;
                 var bphone = document.getElementById('phoneInput').value;
 
-                if (!bname || !bsurname || !bemail || !baddress || !bcity || !bzip || !bphone) {
+                if (!bname || !bsurname || !bemail || !baddress || !bcity || !bpostal || !bphone) {
                     window.alert("Fill the form correctly!");
                     return;
                 }
@@ -78,10 +102,9 @@
                                 email: bemail,
                                 address: baddress,
                                 city: bcity,
-                                zip: bzip,
+                                postal: bpostal,
                                 nip: bnip,
                                 company: bcompany,
-                                id_card: bid_card,
                                 phone: bphone
                             }
                             var id_del = bid;
@@ -108,10 +131,9 @@
                         email: bemail,
                         address: baddress,
                         city: bcity,
-                        zip: bzip,
+                        postal: bpostal,
                         nip: bnip,
                         company: bcompany,
-                        id_card: bid_card,
                         phone: bphone
                     }
                     var transaction = db.transaction(["clients"], "readwrite");
@@ -133,24 +155,15 @@
                 return randomElement;
             }
 
-            function generateRandomAddress() {
-                var street = ['ul. Wólczańska', 'ul. Racławicka', 'ul. Pabianicka', 'Aleja Politechniki', 'ul. Piotrkowska', 'ul. Narutowicza'];
-                var house = Math.floor(Math.random() * 99) + 1 + alphabet[Math.floor(Math.random() * alphabet.length)] + '/' + Math.floor(Math.random() * 9) + 1;
-                return randomText(street) + " " + house.toString();
-            }
-
             document.getElementById('generateButton').onclick = function(e) {
-                document.getElementById("nameInput").value = randomText(['Zuzanna', 'Julia', 'Antoni', 'Stefan', 'Joszko', 'Zbyszko', 'Hipolit', 'Loen', 'Marcin', 'Adam', 'Piotr', 'Wiktor']);
-                document.getElementById("surnameInput").value = randomText(['Wójcik', 'Kowalczyk', 'Woźniak', 'Kowalski', 'Zieliński', 'Duch', 'Szymańczyk', 'Kamińska', 'Lewandowski']);
-                document.getElementById("emailInput").value = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5) + '@gmail.com';
-                document.getElementById("addressInput").value = generateRandomAddress();
-                document.getElementById("cityInput").value = randomText(['Warszawa', 'Gdańsk', 'Gdynia', 'Sopot', 'Kołobrzeg', 'Łódź', 'Poznań']);
-                document.getElementById("zipInput").value = (Math.floor(Math.random() * 89 + 10) + '-' + Math.floor(Math.random() * 899 + 100)).toString();
-                document.getElementById("companyInput").value = Math.random().toString(36).substring(2, 10);
+                document.getElementById("nameInput").value = randomText(['Zuzanna', 'Julia', 'Antoni', 'Stefan', 'Joszko', 'Zbyszko']);
+                document.getElementById("surnameInput").value = randomText(['Wojcik', 'Kowalczyk', 'Wozniak', 'Kowalski', 'Zielinski']);
+                document.getElementById("emailInput").value = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5) + '@wp.pl';
+                document.getElementById("cityInput").value = randomText(['Warszawa', 'Gdańsk', 'Gdynia', 'Sopot', 'Kołobrzeg', 'Gdynia', 'Poznań']);
+                document.getElementById("postalInput").value = (Math.floor(Math.random() * 89 + 10) + '-' + Math.floor(Math.random() * 899 + 100)).toString();
                 document.getElementById("phoneInput").value = Math.floor(Math.random() * 899 + 100).toString() + '-' + Math.floor(Math.random() * 899 + 100).toString() + '-' + Math.floor(Math.random() * 899 + 100).toString();
                 document.getElementById("nipInput").value = Math.floor(Math.random() * 899 + 100).toString() + '-' + Math.floor(Math.random() * 899 + 100).toString() + '-' + Math.floor(Math.random() * 89 + 10).toString() + '-' + Math.floor(Math.random() * 89 + 10).toString();
-                document.getElementById("idCardInput").value = bigAlphabet[Math.floor(Math.random() * bigAlphabet.length)] + bigAlphabet[Math.floor(Math.random() * bigAlphabet.length)] + bigAlphabet[Math.floor(Math.random() * bigAlphabet.length)] + Math.floor(Math.random() * 899999 + 100000).toString();
-            }
+           }
 
 
             function getDbObjects(filter = (object) => true) {
@@ -206,10 +219,9 @@
                 var bemail = document.getElementById('emailInput').value;
                 var baddress = document.getElementById('addressInput').value;
                 var bcity = document.getElementById('cityInput').value;
-                var bzip = document.getElementById('zipInput').value;
+                var bpostal = document.getElementById('postalInput').value;
                 var bnip = document.getElementById('nipInput').value;
                 var bcompany = document.getElementById('companyInput').value;
-                var bid_card = document.getElementById('idCardInput').value;
                 var bphone = document.getElementById('phoneInput').value;
                 const item = {
                     name: bname,
@@ -217,10 +229,9 @@
                     email: bemail,
                     address: baddress,
                     city: bcity,
-                    zip: bzip,
+                    postal: bpostal,
                     nip: bnip,
                     company: bcompany,
-                    id_card: bid_card,
                     phone: bphone
                 }
                 worker.postMessage(JSON.stringify(item));
@@ -234,11 +245,10 @@
                 document.getElementById("emailInput").value = result['email'];
                 document.getElementById("addressInput").value = result['address'];
                 document.getElementById("cityInput").value = result['city'];
-                document.getElementById("zipInput").value = result['zip'];
+                document.getElementById("postalInput").value = result['postal'];
                 document.getElementById("companyInput").value = result['company'];
                 document.getElementById("phoneInput").value = result['phone'];
                 document.getElementById("nipInput").value = result['nip'];
-                document.getElementById("idCardInput").value = result['id_card'];
             }
 
             function updatetable(){
@@ -254,10 +264,9 @@
                             + "</td><td>" + cursor.value.email
                             + "</td><td>" + cursor.value.address
                             + "</td><td>" + cursor.value.city
-                            + "</td><td>" + cursor.value.zip
+                            + "</td><td>" + cursor.value.postal
                             + "</td><td>" + cursor.value.nip
                             + "</td><td>" + cursor.value.company
-                            + "</td><td>" + cursor.value.id_card
                             + "</td><td>" + cursor.value.phone
                             + "</td><td><button id=\"delButton\" value=\"" + cursor.key + "\">X</button>"
                             + "</td></tr>";
@@ -277,59 +286,54 @@
 </head>
 
 <body onload="init()">
-
-<h1>Clients Database</h1>
-<p>
+<button id="generateButton">Generate Random Data</button><br>
+<button id="TriggerWorker">Run Webworker</button>
+<div class="row">
+    <div class="column left">
 <form id="addClientForm">
     <fieldset id="addForm">
         <legend>Add item</legend>
 
-        <label>ID</label>
+        <label>ID</label><br>
         <input id="idInput"><br>
-        <small>(Fill up to edit an existing record)</small><br><br>
 
-        <label>Name *</label>
+        <label>Name *</label><br>
         <input id="nameInput" placeholder="Jan" required><br><br>
 
-        <label>Surname *</label>
+        <label>Surname *</label><br>
         <input id="surnameInput" placeholder="Kowalski" required><br><br>
 
-        <label for="email"> Email: </label>
-        <input required type="email" id="email" name="email" placeholder="aa@aa.com"/> <br>
+        <label for="email">Email *</label><br>
+        <input required id="emailInput" type="email" id="email" name="email" placeholder="aa@aa.com"><br><br>
 
-        <label for="address">Address *</label>
+        <label for="address">Address *</label><br>
         <input required type="text" id="addressInput" id="address" placeholder="Piotrkowska 1"><br><br>
 
-        <label>City *</label>
-        <input id="cityInput" placeholder="Łódź" required><br><br>
+        <label>City *</label><br>
+        <input id="cityInput" placeholder="Lodz" required><br><br>
 
-        <label for="zipcode"> ZIP code: </label>
-        <input required type="text" id="zipcode" name="zipcode" pattern="^[0-9]{2}-[0-9]{3}$" placeholder="91-321"><br>
+        <label for="postalCode">Zip Code *</label><br>
+        <input required type="text" id="postalInput" id="postalCode" name="postal_code" pattern="^[0-9]{2}-[0-9]{3}$" placeholder="91-321" title="Format: (NN-NNN)"><br><br>
 
-        <label for="nipNumber">NIP number </label>
+        <label for="nipNumber">NIP number </label><br>
         <input type="text" id="nipInput" name="nip_number" id="nipNumber" placeholder="123-456-32-18" pattern="((\d{3}[- ]\d{3}[- ]\d{2}[- ]\d{2})|(\d{3}[- ]\d{2}[- ]\d{2}[- ]\d{3}))" title="Polish NIP format"><br><br>
 
-        <label for="companyName">Company name </label>
+        <label for="companyName">Company name </label><br>
         <input id="companyInput" placeholder="kis" id="companyName"><br><br>
 
-        <label for="idCard">ID card number </label>
-        <input type="text" id="idCardInput" name="id_card"  id="idCard" placeholder="ABC123456" pattern="[A-Z]{3}[0-9]{6}" ><br><br>
-
-        <label for="phoneNumber">Phone number *</label>
-        <input required type="text" id="phoneInput" placeholder="123-123-123" id="phoneNumber" name="phone_number" pattern="[0-9]{3}(-)?[0-9]{3}(-)?[0-9]{3}" title="NNN-NNN-NNN or NNNNNNNNN format"><br><br>
+        <label for="phoneNumber">Phone number *</label><br>
+        <input required type="text" id="phoneInput" placeholder="123-123-123" name="phone_number" pattern="[0-9]{3}(-)?[0-9]{3}(-)?[0-9]{3}" title="NNN-NNN-NNN or NNNNNNNNN format"><br><br>
         <button type="submit" id="addButton">Add</button>
     </fieldset>
 </form>
-<button id="generateButton">Generuj dane</button><br>
-<button id="TriggerWorker">Uruchom Webworker</button>
-</p>
+    </div>
 <table id="clients-table">
     <thead>
-    <tr><th>ID</th><th>Name</th><th>Surname</th><th>Email</th><th>Address</th><th>City</th><th>Zip Code</th><th>NIP</th><th>Company</th><th>ID Card</th><th>Phone number</th></tr>
+    <tr><th>ID</th><th>Name</th><th>Surname</th><th>Email</th><th>Address</th><th>City</th><th>Zip Code</th><th>NIP</th><th>Company</th><th>Phone number</th></tr>
     </thead>
     <tbody id="clients-table-body">
     </tbody>
 </table>
-
+</div>
 </body>
 </html>
