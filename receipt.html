@@ -1,13 +1,10 @@
 <html>
-<h1>Receipt</h1>
-<p id="data">
-
+<h1>FAKTURA VAT-marza</h1>
+<p id="dane">
 </p>
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    var text = "Thank you for making a purchase in our shop!<br>";
-    text += "<br><br><b>Data</b><br>";
-    text += `<b>Name:</b> ${urlParams.get('name')}<br><b>Surname:</b> ${urlParams.get('surname')}<br>`;
+    var text = `<b>Name:</b> ${urlParams.get('name')}<br><b>Surname:</b> ${urlParams.get('surname')}<br>`;
     text += `<b>Address: </b> ${urlParams.get('address')}<br><br>`;
 
     text += "<b>Products</b><br>";
@@ -16,18 +13,18 @@
     const tablet = urlParams.get('tablet');
     const phone = urlParams.get('phone');
     if (laptop == "true") {
-        price += 2000;
-        text += "- Laptop - $2000<br>";
+        price += 15 * urlParams.get('laptopq');
+        text += `<b>DVD - 15 PLN - Quantity:</b> ${urlParams.get('laptopq')}<br><br>`;
     }
     if (phone == "true") {
-        price += 700;
-        text += "- Phone - $700<br>";
+        price += 5 * urlParams.get('tabletq');
+        text += `<b>CD - 5 PLN - Quantity:</b> ${urlParams.get('tabletq')}<br><br>`;
     }
     if (tablet == "true") {
-        price += 400;
-        text += "- Tablet - $400<br>";
+        price += 40 * urlParams.get('phoneq');
+        text += `<b>Bluray - 40 PLN - Quantity:</b> ${urlParams.get('phoneq')}<br><br>`;
     }
-    text += `<br><b>Total: </b> $${price}`
-    document.getElementById("data").innerHTML = text;
+    text += `<br><b>Razem: </b> ${price} PLN`
+    document.getElementById("dane").innerHTML = text
 </script>
 </html>
