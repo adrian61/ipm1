@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="pl">
 <head>
     <style>
         input:valid {
@@ -39,8 +38,22 @@
         const bigAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-        window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"};
+        window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
         window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+
+        if (!window.indexedDB) {
+            window.alert("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+        }
+
+        function idInputCheck() {
+            var bid = document.getElementById('idInput').value;
+            if (bid) {
+                document.getElementById('purchase-button').disabled = false;
+            } else {
+                document.getElementById('purchase-button').disabled = true;
+            }
+        }
+
         function init(){
             var request = window.indexedDB.open("ClientDatabase", 1);
             request.onerror = function(event) {
@@ -146,7 +159,33 @@
                     request.onsuccess = function(event){
                     };
                 }
+                idInputCheck();
                 updatetable();
+            }
+
+                       function buy() {
+                var bid = document.getElementById('idInput').value;
+                var bname = document.getElementById('nameInput').value;
+                var bsurname = document.getElementById('surnameInput').value;
+                var bemail = document.getElementById('emailInput').value;
+                var baddress = document.getElementById('addressInput').value;
+                var bcity = document.getElementById('cityInput').value;
+                var bpostal = document.getElementById('postalInput').value;
+                var bnip = document.getElementById('nipInput').value;
+                var bcompany = document.getElementById('companyInput').value;
+                var bphone = document.getElementById('phoneInput').value;
+                var laptop = document.getElementById('product-laptop').checked;
+                var tablet = document.getElementById('product-tablet').checked;
+                var phone = document.getElementById('product-phone').checked;
+                if (!laptop && !tablet && !phone) {
+                    window.alert("Choose a product!");
+                } else {
+                    location.replace(`receipt.html?name=${bname}&surname=${bsurname}&address=${baddress}%20${bcity}%20${bpostal}&laptop=${laptop}&tablet=${tablet}&phone=${phone}`);
+                }
+            }
+
+            document.getElementById('purchase-button').onclick = function(e) {
+                buy();
             }
 
             function randomText(textArray) {
@@ -156,36 +195,19 @@
             }
 
             document.getElementById('generateButton').onclick = function(e) {
+                document.getElementById("idInput").value = "";
+                idInputCheck();
                 document.getElementById("nameInput").value = randomText(['Zuzanna', 'Julia', 'Antoni', 'Stefan', 'Joszko', 'Zbyszko']);
                 document.getElementById("surnameInput").value = randomText(['Wojcik', 'Kowalczyk', 'Wozniak', 'Kowalski', 'Zielinski']);
+                document.getElementById("companyInput").value = randomText(['ABC', 'CBA', 'KNF', 'Politechnika', 'narciarstwo']);
                 document.getElementById("emailInput").value = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5) + '@wp.pl';
                 document.getElementById("cityInput").value = randomText(['Warszawa', 'Gdańsk', 'Gdynia', 'Sopot', 'Kołobrzeg', 'Gdynia', 'Poznań']);
                 document.getElementById("postalInput").value = (Math.floor(Math.random() * 89 + 10) + '-' + Math.floor(Math.random() * 899 + 100)).toString();
                 document.getElementById("phoneInput").value = Math.floor(Math.random() * 899 + 100).toString() + '-' + Math.floor(Math.random() * 899 + 100).toString() + '-' + Math.floor(Math.random() * 899 + 100).toString();
                 document.getElementById("nipInput").value = Math.floor(Math.random() * 899 + 100).toString() + '-' + Math.floor(Math.random() * 899 + 100).toString() + '-' + Math.floor(Math.random() * 89 + 10).toString() + '-' + Math.floor(Math.random() * 89 + 10).toString();
+                document.getElementById("addressInput").value = randomText(['Piotrkowska 5', 'Mickiewicza 3', 'Dudy 1', 'Kaczyńskiego 10', 'Banasia 3']);
             }
 
-
-            function getDbObjects(filter = (object) => true) {
-                let ret = new Promise((res, rej) => {
-                    let objects = [];
-                    if (db) {
-                        var store = db.transaction(['clients'], 'readonly').objectStore('clients');
-                        store.openCursor().onsuccess = (e) => {
-                            var c = e.target.result;
-                            if (c) {
-                                if (filter(c.value)) {
-                                    objects.push(c.value);
-                                }
-                                c.continue();
-                            } else {
-                                res(objects);
-                            }
-                        };
-                    }
-                });
-                return ret;
-            }
 
             document.getElementById('TriggerWorker').onclick = function(event) {
                 console.log("clicked!");
@@ -227,61 +249,10 @@
                 document.getElementById("phoneInput").value = result['phone'];
                 document.getElementById("nipInput").value = result['nip'];
             }
-
             function updatetable(){
                 document.getElementById("clients-table-body").innerHTML = "";
                 var request = db.transaction("clients").objectStore("clients").openCursor();
-                request.onsuccess = function(event){
-                    cursor = event.target.result;
-
-                    if (cursor) {
-                        document.getElementById("clients-table-body").innerHTML += "<tr><td>" + cursor.key +
-                            "</td><td>" + cursor.value.name
-                            + "</td><td>" + cursor.value.surname
-                            + "</td><td>" + cursor.value.email
-                            + "</td><td>" + cursor.value.address
-                            + "</td><td>" + cursor.value.city
-                            + "</td><td>" + cursor.value.postal
-                            + "</td><td>" + cursor.value.nip
-                            + "</td><td>" + cursor.value.company
-                            + "</td><td>" + cursor.value.phone
-                            + "</td><td><button id=\"delButton\" value=\"" + cursor.key + "\">X</button>"
-                            + "</td><td><button onclick=\"editRecord(" + cursor.key + ")\">Pick</button>"
-                            + "</td></tr>";
-                        document.getElementById('delButton').onclick = function(e){
-                            var id_del = parseInt(document.getElementById('delButton').value);
-                            var request = db.transaction(["clients"], "readwrite").objectStore("clients").delete(id_del);
-                            document.getElementById('filterInput').value = "";
-                            updatetable();
-                        }
-                    }
-                    cursor.continue();
-                }
-            };
-            function editRecord(id) {
-                var objectStore = db.transaction(["clients"], "readwrite").objectStore("clients");
-                var request = objectStore.get(id);
-                document.getElementById('filterInput').value = "";
-                document.getElementById("clients-table-body").innerHTML = "";
-                request.onsuccess = function(event) {
-                    var result = event.target.result;
-                    document.getElementById("idInput").value = id.toString();
-                    document.getElementById("nameInput").value = result.name;
-                    document.getElementById("surnameInput").value = result.surname;
-                    document.getElementById("emailInput").value = result.email;
-                    document.getElementById("addressInput").value = result.address;
-                    document.getElementById("cityInput").value = result.city;
-                    document.getElementById("postalInput").value = result.postal;
-                    document.getElementById("companyInput").value = result.company;
-                    document.getElementById("phoneInput").value = result.phone;
-                    document.getElementById("nipInput").value = result.nip;
-                    document.getElementById("idCardInput").value = result.id_card;
-                    idInputCheck();
-                }
-                document.getElementById("clients-table-body").innerHTML = "";
-                request = db.transaction("clients").objectStore("clients").openCursor();
                 request.onerror = function(event){
-                    console.dir(event);
                 };
                 request.onsuccess = function(event){
                     cursor = event.target.result;
@@ -296,7 +267,6 @@
                             + "</td><td>" + cursor.value.postal
                             + "</td><td>" + cursor.value.nip
                             + "</td><td>" + cursor.value.company
-                            + "</td><td>" + cursor.value.id_card
                             + "</td><td>" + cursor.value.phone
                             + "</td><td><button onclick=\"delButton(" + cursor.key + ")\">X</button>"
                             + "</td><td><button onclick=\"editRecord(" + cursor.key + ")\">Pick</button>"
@@ -308,54 +278,12 @@
                 }
             };
         }
-        function buy() {
-            var bname = document.getElementById('nameInput').value;
-            var bsurname = document.getElementById('surnameInput').value;
-            var baddress = document.getElementById('addressInput').value;
-            var bcity = document.getElementById('cityInput').value;
-            var bpostal = document.getElementById('postalInput').value;
-            var dvd = document.getElementById('product-dvd').checked;
-            var cd = document.getElementById('product-cd').checked;
-            var bluray = document.getElementById('product-bluray').checked;
-            if (!dvd && !cd && !bluray) {
-                window.alert("Choose a product!");
-            } else {
-                location.replace(`receipt.html?name=${bname}&surname=${bsurname}&address=${baddress}%20${bcity}%20${bpostal}&dvd=${dvd}&cd=${cd}&bluray=${bluray}`);
-            }
-        }
-        document.getElementById('purchase-button').onclick = function(e) {
-            buy();
-        }
-        function idInputCheck() {
-            var bid = document.getElementById('idInput').value;
-            if (bid) {
-                document.getElementById('purchase-button').disabled = false;
-            } else {
-                document.getElementById('purchase-button').disabled = true;
-            }
-        }
-        function editRecord(id) {
-            var objectStore = db.transaction(["clients"], "readwrite").objectStore("clients");
-            var request = objectStore.get(id);
-            document.getElementById("clients-table-body").innerHTML = "";
-            request.onsuccess = function(event) {
-                var result = event.target.result;
-                document.getElementById("idInput").value = id.toString();
-                document.getElementById("nameInput").value = result.name;
-                document.getElementById("surnameInput").value = result.surname;
-                document.getElementById("emailInput").value = result.email;
-                document.getElementById("addressInput").value = result.address;
-                document.getElementById("cityInput").value = result.city;
-                document.getElementById("postalInput").value = result.postal;
-                document.getElementById("companyInput").value = result.company;
-                document.getElementById("phoneInput").value = result.phone;
-                document.getElementById("nipInput").value = result.nip;
-                idInputCheck();
-            }
+
+        function delButton(id_del) {
+            var request = db.transaction(["clients"], "readwrite").objectStore("clients").delete(id_del);
             document.getElementById("clients-table-body").innerHTML = "";
             request = db.transaction("clients").objectStore("clients").openCursor();
             request.onerror = function(event){
-                console.dir(event);
             };
             request.onsuccess = function(event){
                 cursor = event.target.result;
@@ -380,6 +308,80 @@
                 } catch (Exception) {}
             }
         };
+
+        function editRecord(id) {
+            var objectStore = db.transaction(["clients"], "readwrite").objectStore("clients");
+            var request = objectStore.get(id);
+            document.getElementById("clients-table-body").innerHTML = "";
+            request.onsuccess = function(event) {
+                var result = event.target.result;
+                document.getElementById("idInput").value = id.toString();
+                document.getElementById("nameInput").value = result.name;
+                document.getElementById("surnameInput").value = result.surname;
+                document.getElementById("emailInput").value = result.email;
+                document.getElementById("addressInput").value = result.address;
+                document.getElementById("cityInput").value = result.city;
+                document.getElementById("postalInput").value = result.postal;
+                document.getElementById("companyInput").value = result.company;
+                document.getElementById("phoneInput").value = result.phone;
+                document.getElementById("nipInput").value = result.nip;
+                idInputCheck();
+            }
+            document.getElementById("clients-table-body").innerHTML = "";
+            request = db.transaction("clients").objectStore("clients").openCursor();
+            request.onerror = function(event){
+            };
+            request.onsuccess = function(event){
+                cursor = event.target.result;
+
+                if (cursor) {
+                    document.getElementById("clients-table-body").innerHTML += "<tr><td>" + cursor.key +
+                        "</td><td>" + cursor.value.name
+                        + "</td><td>" + cursor.value.surname
+                        + "</td><td>" + cursor.value.email
+                        + "</td><td>" + cursor.value.address
+                        + "</td><td>" + cursor.value.city
+                        + "</td><td>" + cursor.value.postal
+                        + "</td><td>" + cursor.value.nip
+                        + "</td><td>" + cursor.value.company
+                        + "</td><td>" + cursor.value.phone
+                        + "</td><td><button onclick=\"delButton(" + cursor.key + ")\">X</button>"
+                        + "</td><td><button onclick=\"editRecord(" + cursor.key + ")\">Pick</button>"
+                        + "</td></tr>";
+                }
+                try {
+                    cursor.continue();
+                } catch (Exception) {}
+            }
+        };
+        document.getElementById('TriggerWorker').onclick = function(event) {
+            console.log("clicked!");
+            const worker = new Worker('worker.js');
+
+            var bname = document.getElementById('nameInput').value;
+            var bsurname = document.getElementById('surnameInput').value;
+            var bemail = document.getElementById('emailInput').value;
+            var baddress = document.getElementById('addressInput').value;
+            var bcity = document.getElementById('cityInput').value;
+            var bpostal = document.getElementById('postalInput').value;
+            var bnip = document.getElementById('nipInput').value;
+            var bcompany = document.getElementById('companyInput').value;
+            var bphone = document.getElementById('phoneInput').value;
+            const item = {
+                name: bname,
+                surname: bsurname,
+                email: bemail,
+                address: baddress,
+                city: bcity,
+                postal: bpostal,
+                nip: bnip,
+                company: bcompany,
+                phone: bphone
+            }
+            worker.postMessage(JSON.stringify(item));
+            worker.addEventListener('message', handleMessageFromWorker);
+        }
+
     </script>
 </head>
 
@@ -424,30 +426,34 @@
                 <button type="submit" id="addButton">Add</button>
             </fieldset>
         </form>
-        <form id="productsForm">
-            <fieldset id="chooseProducts">
-                Pick a client to make a purchase<br><br>
 
-                <input type="checkbox" id="product-dvd" name="product-laptop">
-                <label for="product-dvd">DVD 5 PLN</label><br>
+<form id="productsForm">
+    <fieldset id="chooseProducts">
+        Pick a client (from the table below) to make a purchase<br><br>
 
-                <input type="checkbox" id="product-cd" name="product-phone">
-                <label for="product-cd">CD 10 PLN</label><br>
+        <input type="checkbox" id="product-laptop" name="product-laptop">
+        <label for="product-laptop">Laptop $2000</label><br>
 
-                <input type="checkbox" id="product-bluray" name="product-tablet">
-                <label for="product-bluray">Bluray 30 PLN</label><br><br>
+        <input type="checkbox" id="product-phone" name="product-phone">
+        <label for="product-phone">Phone $700</label><br>
 
-                <button type="button" id="purchase-button" disabled>Buy</button>
-            </fieldset>
-        </form>
+        <input type="checkbox" id="product-tablet" name="product-tablet">
+        <label for="product-tablet">Tablet $400</label><br><br>
+
+        <button type="button" id="purchase-button" disabled>Buy</button>
+    </fieldset>
+</form>
     </div>
-    <table id="clients-table">
-        <thead>
-        <tr><th>ID</th><th>Name</th><th>Surname</th><th>Email</th><th>Address</th><th>City</th><th>Zip Code</th><th>NIP</th><th>Company</th><th>Phone number</th></tr>
-        </thead>
-        <tbody id="clients-table-body">
-        </tbody>
-    </table>
+
+<table id="clients-table">
+    <thead>
+    <tr>
+        <th>ID</th><th>Name</th><th>Surname</th><th>Email</th><th>Address</th><th>City</th><th>Zip Code</th><th>NIP</th><th>Company</th><th>Phone number</th><th></th><th></th>
+    </tr>
+    </thead>
+    <tbody id="clients-table-body">
+    </tbody>
+</table>
 </div>
 </body>
 </html>
