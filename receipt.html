@@ -202,20 +202,20 @@
 
     }
     if (phone == "true") {
-        price += 5 * urlParams.get('phoneq');
-        document.getElementById("item2").innerHTML = "CD";
+        price += 40 * urlParams.get('phoneq');
+        document.getElementById("item2").innerHTML = "Bluray";
         document.getElementById("q2").innerHTML = urlParams.get('phoneq');
-        document.getElementById("p2").innerHTML = "5 PLN";
+        document.getElementById("p2").innerHTML = "40 PLN";
     }
     else {
         document.getElementById("tl2").innerHTML = "";
 
     }
     if (tablet == "true") {
-        price += 40 * urlParams.get('tabletq');
-        document.getElementById("item3").innerHTML = "Bluray";
+        price += 5 * urlParams.get('tabletq');
+        document.getElementById("item3").innerHTML = "CD";
         document.getElementById("q3").innerHTML = urlParams.get('tabletq');
-        document.getElementById("p3").innerHTML = "40 PLN";
+        document.getElementById("p3").innerHTML = "5 PLN";
     }
     else {
         document.getElementById("tl3").innerHTML = "";
