@@ -106,7 +106,7 @@
                 <table>
                     <tr>
                         <td class="title">
-                            <img src="http://www.zsrdrupal.p.lodz.pl/sites/default/files/logo-pl.png" style="width: 100%; max-width: 300px" />
+                            <img src="logo.png" style="width: 100%; max-width: 300px" />
                         </td>
 
                         <td>
@@ -184,7 +184,7 @@
     today = mm + '/' + dd + '/' + yyyy;
     document.getElementById("date2").innerHTML = today;
     const urlParams = new URLSearchParams(window.location.search);
-    var text = `${urlParams.get('name')}<br>${urlParams.get('surname')}<br>`;
+    var text = `${urlParams.get('name')} ${urlParams.get('surname')}<br>`;
     text += `${urlParams.get('address')}<br><br>`;
     document.getElementById("adres").innerHTML = text;
     var price = 0;
